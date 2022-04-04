@@ -12,3 +12,6 @@ app.listen(port, () => {
     return console.log(`Server started, listening on Port ${port}`)
 });
 
+export {
+    app
+}

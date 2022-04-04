@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { Event } from 'Event'
 import { DailyWeatherForecast, getWeatherDataByLatLong, getWeatherDataByZipCode } from '../api/getWeatherData'
+import { getEventsInNext3Days } from '../utils/dateUtils'
 
 const router = Router()
 
@@ -18,17 +19,8 @@ function mapForecastToEvent(event: Event, forecast: DailyWeatherForecast) : Even
 }
 
 router.get('/', async (request: Request, response: Response) => {
-    const dateNow = new Date()
-    //Gets todays date and adds 3 days
-    const forecastDateThreshold = new Date()
-    forecastDateThreshold.setDate(forecastDateThreshold.getDate() + 3)
     const eventList: Event[] = request.body
-    
-    // Events between now and the next 3 days
-    const eventsInNext3Days = eventList.filter((thisEvent: Event) => {
-        thisEvent.dateTime = new Date(thisEvent.dateTime)
-        return thisEvent.dateTime < forecastDateThreshold && thisEvent.dateTime >= dateNow
-    })
+    const eventsInNext3Days = getEventsInNext3Days(eventList)
 
     // Get the forecast for each event, and wait for all the promises to be resolved
     const eventForecasts = await Promise.all(eventsInNext3Days.map((thisEvent: Event) => {

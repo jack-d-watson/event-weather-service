@@ -81,3 +81,8 @@ export function getWeatherDataByLatLong(gpsLocation: MapPoint, dateTime: Date) :
     // Convert map point into the string form accepted by Weather Api
     return getWeatherData(`${gpsLocation.lat},${gpsLocation.long}`, dateTime)
 }
+
+export default {
+    getWeatherDataByZipCode,
+    getWeatherDataByLatLong,
+}
